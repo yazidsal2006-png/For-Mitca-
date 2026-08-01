@@ -23,7 +23,7 @@
       padding: 20px;
     }
 
-    /* Fondo animado con brillitos flotantes */
+    /* Fondo animado con brillitos */
     .bg-sparkles {
       position: absolute;
       top: 0;
@@ -54,21 +54,13 @@
     .sparkle:nth-child(6) { left: 75%; width: 25px; height: 25px; animation-delay: 3s; }
 
     @keyframes animate {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-        border-radius: 50%;
-      }
-      100% {
-        transform: translateY(-1000px) rotate(720deg);
-        opacity: 0;
-        border-radius: 50%;
-      }
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 50%; }
+      100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
     }
 
     /* Tarjeta principal */
     .card {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       padding: 35px 25px;
       border-radius: 25px;
@@ -80,6 +72,7 @@
       z-index: 10;
       border: 2px solid rgba(255, 255, 255, 0.8);
       animation: fadeIn 0.8s ease-in-out;
+      min-height: 380px;
     }
 
     @keyframes fadeIn {
@@ -87,32 +80,19 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    h1 {
-      color: #ff3366;
-      font-size: 26px;
-      margin-bottom: 15px;
-    }
+    h1 { color: #ff3366; font-size: 26px; margin-bottom: 15px; }
+    h2 { color: #ff3366; font-size: 22px; margin-bottom: 15px; }
+    p { color: #555; font-size: 16px; line-height: 1.6; }
 
-    h2 {
-      color: #ff3366;
-      font-size: 22px;
-      margin-bottom: 15px;
-    }
-
-    p {
-      color: #555;
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
+    /* Contenedor de botones separado y delimitado */
     .btn-container {
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
       align-items: center;
-      gap: 15px;
-      margin-top: 25px;
-      min-height: 60px;
+      margin-top: 30px;
+      height: 120px;
       position: relative;
+      width: 100%;
     }
 
     .btn {
@@ -123,7 +103,7 @@
       border-radius: 50px;
       cursor: pointer;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
+      transition: transform 0.15s ease, left 0.2s ease, top 0.2s ease;
       outline: none;
     }
 
@@ -131,30 +111,40 @@
       background: linear-gradient(45deg, #ff416c, #ff4b2b);
       color: white;
       box-shadow: 0 6px 20px rgba(255, 65, 108, 0.4);
+      z-index: 2;
     }
 
     .btn-no {
       background: #6c757d;
       color: white;
-      position: absolute;
-      z-index: 20;
+      z-index: 5;
       touch-action: none;
+      position: relative;
+    }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 15px;
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
     }
 
     .step { display: none; }
+    .step.active { display: block; animation: fadeIn 0.5s ease-in-out; }
 
-    .step.active {
-      display: block;
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    select, input[type="datetime-local"] {
+    select, input[type="datetime-local"], input[type="text"] {
       width: 100%;
       padding: 14px;
       font-size: 16px;
       border-radius: 15px;
       border: 2px solid #ffccd5;
-      margin: 15px 0;
+      margin: 10px 0;
       background: #fff;
       color: #333;
       outline: none;
@@ -194,14 +184,14 @@
     <li class="sparkle"></li>
   </ul>
 
-  <div class="card">
+  <div class="card" id="cardBox">
     <!-- Paso 1 -->
     <div id="step1" class="step active">
       <div class="decoration-icon">💖✨</div>
       <h1>¿Quieres salir conmigo?</h1>
       <p>Tengo una propuesta especial para ti... ¿Aceptas?</p>
       
-      <div class="btn-container">
+      <div class="btn-container" id="btnArea">
         <button class="btn btn-yes" onclick="nextStep(2)">¡Sí! 😍</button>
         <button class="btn btn-no" id="btnNo" ontouchstart="moveButton()" onmouseover="moveButton()">No 😜</button>
       </div>
@@ -220,12 +210,16 @@
     <div id="step3" class="step">
       <div class="decoration-icon">🍕🎬✨</div>
       <h2>¿Qué plan te gusta más?</h2>
-      <select id="activity">
+      <select id="activity" onchange="checkCustomOption()">
         <option value="ir a comer algo super delicioso 🍕">Ir a comer algo rico 🍕</option>
         <option value="ir al cine a ver una peli genial 🍿">Ir al cine 🍿</option>
         <option value="dar una caminata bonita y platicar 🌳">Caminar y platicar 🌳</option>
         <option value="ponernos a dibujar y crear cosas divertidas 🎨">Dibujar juntos 🎨</option>
+        <option value="custom">Otra opción / Sugerir algo más... 💡</option>
       </select>
+      
+      <input type="text" id="customActivity" placeholder="Escribe aquí tu sugerencia..." style="display: none;">
+
       <button class="btn btn-yes" style="width: 100%; margin-top: 10px;" onclick="showFinal()">Confirmar Plan 🎉</button>
     </div>
 
@@ -236,24 +230,32 @@
       <div class="final-box">
         <p id="finalMessage"></p>
       </div>
-      <p style="margin-top: 15px; font-size: 14px; color: #777;">¡Ya lo anoté en mi calendario! 😉</p>
+
+      <!-- Botón para enviar por WhatsApp directamente -->
+      <a id="whatsappBtn" href="#" target="_blank" class="btn btn-whatsapp">
+        Enviar respuesta por WhatsApp 📲
+      </a>
+
+      <p style="margin-top: 15px; font-size: 13px; color: #777;">O puedes tomar una captura de pantalla y mandármela 😉</p>
     </div>
   </div>
 
   <script>
     let selectedDate = '';
+    let chosenPlan = '';
 
     function moveButton() {
       const btnNo = document.getElementById('btnNo');
-      const container = document.body;
+      const container = document.getElementById('btnArea');
       
-      const maxX = container.clientWidth - btnNo.offsetWidth - 30;
-      const maxY = container.clientHeight - btnNo.offsetHeight - 30;
+      // Calcular límites dentro del contenedor sin salirse de la tarjeta
+      const maxX = container.clientWidth - btnNo.offsetWidth;
+      const maxY = container.clientHeight - btnNo.offsetHeight;
       
-      const randomX = Math.max(15, Math.floor(Math.random() * maxX));
-      const randomY = Math.max(15, Math.floor(Math.random() * maxY));
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
       
-      btnNo.style.position = 'fixed';
+      btnNo.style.position = 'absolute';
       btnNo.style.left = randomX + 'px';
       btnNo.style.top = randomY + 'px';
     }
@@ -277,10 +279,37 @@
       nextStep(3);
     }
 
+    function checkCustomOption() {
+      const selectVal = document.getElementById('activity').value;
+      const customInput = document.getElementById('customActivity');
+      if (selectVal === 'custom') {
+        customInput.style.display = 'block';
+        customInput.focus();
+      } else {
+        customInput.style.display = 'none';
+      }
+    }
+
     function showFinal() {
-      const activity = document.getElementById('activity').value;
-      const message = `Nos vemos el <b>${selectedDate}</b> para <b>${activity}</b>. ¡Promete ser un día increíble! ✨`;
+      const selectVal = document.getElementById('activity').value;
+      const customInput = document.getElementById('customActivity').value.trim();
+
+      if (selectVal === 'custom' && customInput !== '') {
+        chosenPlan = customInput;
+      } else if (selectVal === 'custom' && customInput === '') {
+        alert('Por favor escribe tu sugerencia de plan 💡');
+        return;
+      } else {
+        chosenPlan = selectVal;
+      }
+
+      const message = `Nos vemos el <b>${selectedDate}</b> para <b>${chosenPlan}</b>. ¡Promete ser un día increíble! ✨`;
       document.getElementById('finalMessage').innerHTML = message;
+
+      // Crear enlace automático para enviar respuesta por WhatsApp
+      const textoWhatsapp = `¡Hola! Ya respondí tu invitación 💖%0A%0A📅 *Fecha:* ${selectedDate}%0A🍕 *Plan:* ${chosenPlan}%0A%0A¡Nos vemos ese día! ✨`;
+      document.getElementById('whatsappBtn').href = `https://api.whatsapp.com/send?text=${textoWhatsapp}`;
+
       nextStep(4);
     }
   </script>
