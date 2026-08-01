@@ -84,13 +84,14 @@
     h2 { color: #ff3366; font-size: 22px; margin-bottom: 15px; }
     p { color: #555; font-size: 16px; line-height: 1.6; }
 
-    /* Contenedor de botones separado y delimitado */
+    /* Contenedor de botones fijo */
     .btn-container {
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
       align-items: center;
-      margin-top: 30px;
-      height: 120px;
+      gap: 20px;
+      margin-top: 35px;
+      height: 60px;
       position: relative;
       width: 100%;
     }
@@ -103,23 +104,26 @@
       border-radius: 50px;
       cursor: pointer;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      transition: transform 0.15s ease, left 0.2s ease, top 0.2s ease;
       outline: none;
     }
 
+    /* El botón Sí NUNCA se moverá */
     .btn-yes {
       background: linear-gradient(45deg, #ff416c, #ff4b2b);
       color: white;
       box-shadow: 0 6px 20px rgba(255, 65, 108, 0.4);
+      position: relative;
       z-index: 2;
     }
 
+    /* El botón No inicia en su lugar y se mueve con transición suave */
     .btn-no {
       background: #6c757d;
       color: white;
-      z-index: 5;
+      z-index: 999;
       touch-action: none;
       position: relative;
+      transition: left 0.25s ease, top 0.25s ease;
     }
 
     .btn-whatsapp {
@@ -138,13 +142,23 @@
     .step { display: none; }
     .step.active { display: block; animation: fadeIn 0.5s ease-in-out; }
 
+    label {
+      display: block;
+      text-align: left;
+      font-size: 14px;
+      color: #ff3366;
+      font-weight: bold;
+      margin-top: 10px;
+      margin-bottom: 2px;
+    }
+
     select, input[type="datetime-local"], input[type="text"] {
       width: 100%;
-      padding: 14px;
-      font-size: 16px;
+      padding: 12px;
+      font-size: 15px;
       border-radius: 15px;
       border: 2px solid #ffccd5;
-      margin: 10px 0;
+      margin-bottom: 10px;
       background: #fff;
       color: #333;
       outline: none;
@@ -184,25 +198,31 @@
     <li class="sparkle"></li>
   </ul>
 
-  <div class="card" id="cardBox">
+  <div class="card">
     <!-- Paso 1 -->
     <div id="step1" class="step active">
       <div class="decoration-icon">💖✨</div>
       <h1>¿Quieres salir conmigo?</h1>
       <p>Tengo una propuesta especial para ti... ¿Aceptas?</p>
       
-      <div class="btn-container" id="btnArea">
+      <div class="btn-container">
         <button class="btn btn-yes" onclick="nextStep(2)">¡Sí! 😍</button>
         <button class="btn btn-no" id="btnNo" ontouchstart="moveButton()" onmouseover="moveButton()">No 😜</button>
       </div>
     </div>
 
-    <!-- Paso 2 -->
+    <!-- Paso 2: Elección de Fechas (Rango de inicio a fin) -->
     <div id="step2" class="step">
       <div class="decoration-icon">📅✨</div>
       <h2>¡Sabía que dirías que sí! 🥰</h2>
-      <p>Elige el día y la hora que mejor te acomode:</p>
-      <input type="datetime-local" id="dateTime">
+      <p>Elige las fechas o el rango de días en que nos podríamos ver:</p>
+      
+      <label for="startDate">Desde:</label>
+      <input type="datetime-local" id="startDate">
+
+      <label for="endDate">Hasta (opcional):</label>
+      <input type="datetime-local" id="endDate">
+
       <button class="btn btn-yes" style="width: 100%; margin-top: 10px;" onclick="saveDateTime()">Siguiente 👉</button>
     </div>
 
@@ -241,21 +261,30 @@
   </div>
 
   <script>
-    let selectedDate = '';
+    let dateSummaryText = '';
     let chosenPlan = '';
 
     function moveButton() {
       const btnNo = document.getElementById('btnNo');
-      const container = document.getElementById('btnArea');
       
-      // Calcular límites dentro del contenedor sin salirse de la tarjeta
-      const maxX = container.clientWidth - btnNo.offsetWidth;
-      const maxY = container.clientHeight - btnNo.offsetHeight;
+      // Margen solicitado de 50px de cada borde de la pantalla
+      const margin = 50;
       
-      const randomX = Math.floor(Math.random() * maxX);
-      const randomY = Math.floor(Math.random() * maxY);
+      const btnWidth = btnNo.offsetWidth;
+      const btnHeight = btnNo.offsetHeight;
       
-      btnNo.style.position = 'absolute';
+      const minX = margin;
+      const maxX = window.innerWidth - btnWidth - margin;
+      const minY = margin;
+      const maxY = window.innerHeight - btnHeight - margin;
+      
+      const finalMaxX = Math.max(minX, maxX);
+      const finalMaxY = Math.max(minY, maxY);
+
+      const randomX = Math.floor(Math.random() * (finalMaxX - minX + 1)) + minX;
+      const randomY = Math.floor(Math.random() * (finalMaxY - minY + 1)) + minY;
+      
+      btnNo.style.position = 'fixed';
       btnNo.style.left = randomX + 'px';
       btnNo.style.top = randomY + 'px';
     }
@@ -266,16 +295,31 @@
     }
 
     function saveDateTime() {
-      const dateVal = document.getElementById('dateTime').value;
-      if (!dateVal) {
-        alert('Por favor selecciona una fecha y hora 📅');
+      const startVal = document.getElementById('startDate').value;
+      const endVal = document.getElementById('endDate').value;
+
+      if (!startVal) {
+        alert('Por favor selecciona al menos la fecha de inicio 📅');
         return;
       }
-      const dateObj = new Date(dateVal);
-      selectedDate = dateObj.toLocaleString('es-MX', { 
+
+      const startObj = new Date(startVal);
+      const formattedStart = startObj.toLocaleString('es-MX', { 
         dateStyle: 'full', 
         timeStyle: 'short' 
       });
+
+      if (endVal) {
+        const endObj = new Date(endVal);
+        const formattedEnd = endObj.toLocaleString('es-MX', { 
+          dateStyle: 'full', 
+          timeStyle: 'short' 
+        });
+        dateSummaryText = `del <b>${formattedStart}</b> al <b>${formattedEnd}</b>`;
+      } else {
+        dateSummaryText = `el <b>${formattedStart}</b>`;
+      }
+
       nextStep(3);
     }
 
@@ -303,11 +347,12 @@
         chosenPlan = selectVal;
       }
 
-      const message = `Nos vemos el <b>${selectedDate}</b> para <b>${chosenPlan}</b>. ¡Promete ser un día increíble! ✨`;
+      const message = `Nos vemos ${dateSummaryText} para <b>${chosenPlan}</b>. ¡Promete ser un día increíble! ✨`;
       document.getElementById('finalMessage').innerHTML = message;
 
-      // Crear enlace automático para enviar respuesta por WhatsApp
-      const textoWhatsapp = `¡Hola! Ya respondí tu invitación 💖%0A%0A📅 *Fecha:* ${selectedDate}%0A🍕 *Plan:* ${chosenPlan}%0A%0A¡Nos vemos ese día! ✨`;
+      // Limpiar etiquetas HTML para el mensaje plano de WhatsApp
+      const cleanDateSummary = dateSummaryText.replace(/<b>/g, '').replace(/<\/b>/g, '');
+      const textoWhatsapp = `¡Hola! Ya respondí tu invitación 💖%0A%0A📅 *Fecha:* ${cleanDateSummary}%0A🍕 *Plan:* ${chosenPlan}%0A%0A¡Nos vemos! ✨`;
       document.getElementById('whatsappBtn').href = `https://api.whatsapp.com/send?text=${textoWhatsapp}`;
 
       nextStep(4);
