@@ -80,9 +80,17 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    h1 { color: #ff3366; font-size: 26px; margin-bottom: 15px; }
-    h2 { color: #ff3366; font-size: 22px; margin-bottom: 15px; }
-    p { color: #555; font-size: 16px; line-height: 1.6; }
+    h1 { color: #ff3366; font-size: 24px; margin-bottom: 12px; }
+    h2 { color: #ff3366; font-size: 22px; margin-bottom: 10px; }
+    p { color: #555; font-size: 16px; line-height: 1.5; }
+
+    .subtext-small {
+      color: #888;
+      font-size: 14px;
+      margin-top: 4px;
+      margin-bottom: 15px;
+      font-style: italic;
+    }
 
     /* Área delimitada para los botones */
     .btn-container {
@@ -104,7 +112,7 @@
       outline: none;
     }
 
-    /* El botón Sí permanece totalmente estático a la izquierda */
+    /* El botón Sí se mantiene totalmente estático */
     .btn-yes {
       background: linear-gradient(45deg, #ff416c, #ff4b2b);
       color: white;
@@ -115,7 +123,7 @@
       z-index: 10;
     }
 
-    /* El botón No inicia a la derecha y se mueve dentro de la tarjeta */
+    /* El botón No se mueve sin salirse de la tarjeta */
     .btn-no {
       background: #6c757d;
       color: white;
@@ -166,7 +174,7 @@
     }
 
     .decoration-icon {
-      font-size: 50px;
+      font-size: 48px;
       margin-bottom: 10px;
       display: inline-block;
       animation: pulse 1.5s infinite;
@@ -203,8 +211,9 @@
     <!-- Paso 1 -->
     <div id="step1" class="step active">
       <div class="decoration-icon">💖✨</div>
-      <h1>¿Quieres salir conmigo?</h1>
-      <p>Tengo una propuesta especial para ti... ¿Aceptas?</p>
+      <h1>✨ 🤍 Te Quiero Mitca 🤍 ✨</h1>
+      <p style="margin-bottom: 8px; font-weight: bold; color: #ff3366;">¿Quieres salir conmigo?</p>
+      <p>¿Qué te parece, pequeña? 🥰</p>
       
       <div class="btn-container" id="btnArea">
         <button class="btn btn-yes" onclick="nextStep(2)">¡Sí! 😍</button>
@@ -214,9 +223,9 @@
 
     <!-- Paso 2: Elección de Fechas -->
     <div id="step2" class="step">
-      <div class="decoration-icon">📅✨</div>
-      <h2>¡Sabía que dirías que sí! 🥰</h2>
-      <p>Elige las fechas o el rango de días en que nos podríamos ver:</p>
+      <div class="decoration-icon">😮‍💨💨</div>
+      <h2>¡Pensaba que ibas a decir que no!</h2>
+      <p>¿Cuándo y cuánto tiempo quieres ver a este joven y guapo y apuesto cristiano? 😇🙏✨</p>
       
       <label for="startDate">El:</label>
       <input type="datetime-local" id="startDate">
@@ -229,8 +238,10 @@
 
     <!-- Paso 3 -->
     <div id="step3" class="step">
-      <div class="decoration-icon">🍕🎬✨</div>
-      <h2>¿Qué plan te gusta más?</h2>
+      <div class="decoration-icon">🤠🌾✨</div>
+      <h2>¿Qué te gustaría hacer, chaparra?</h2>
+      <p class="subtext-small">¿Qué hacemos en tu rancho? 🏡</p>
+      
       <select id="activity" onchange="checkCustomOption()">
         <option value="ir a comer algo super delicioso 🍕">Ir a comer algo rico 🍕</option>
         <option value="ir al cine a ver una peli genial 🍿">Ir al cine 🍿</option>
@@ -246,8 +257,8 @@
 
     <!-- Paso 4 -->
     <div id="step4" class="step">
-      <div class="decoration-icon">🎉🥳💖</div>
-      <h2>¡Trato Hecho!</h2>
+      <div class="decoration-icon">🤝✨🙌</div>
+      <h2>Así quedamos, hermana Mitca</h2>
       <div class="final-box">
         <p id="finalMessage"></p>
       </div>
@@ -257,7 +268,9 @@
         Enviar respuesta por WhatsApp 📲
       </a>
 
-      <p style="margin-top: 15px; font-size: 13px; color: #777;">O puedes tomar una captura de pantalla y mandármela 😉</p>
+      <p style="margin-top: 15px; font-size: 13px; color: #666;">
+        O puedes tomar una captura de pantalla y mandármela. ¡Nos vemos ese día primero Dios, chaparra! 😉✨
+      </p>
     </div>
   </div>
 
@@ -269,14 +282,14 @@
       const btnNo = document.getElementById('btnNo');
       const container = document.getElementById('btnArea');
       
-      // Delimitación exacta dentro del recuadro visible de la tarjeta
+      // Delimitación dentro del recuadro
       const maxX = container.clientWidth - btnNo.offsetWidth - 10;
       const maxY = container.clientHeight - btnNo.offsetHeight - 10;
       
       const randomX = Math.max(10, Math.floor(Math.random() * maxX));
       const randomY = Math.max(10, Math.floor(Math.random() * maxY));
       
-      btnNo.style.right = 'auto'; // Cancelar posición derecha fija inicial
+      btnNo.style.right = 'auto';
       btnNo.style.left = randomX + 'px';
       btnNo.style.top = randomY + 'px';
     }
@@ -291,7 +304,7 @@
       const endVal = document.getElementById('endDate').value;
 
       if (!startVal) {
-        alert('Por favor selecciona al menos la fecha de inicio 📅');
+        alert('Por favor selecciona al menos la fecha 📅');
         return;
       }
 
@@ -339,12 +352,12 @@
         chosenPlan = selectVal;
       }
 
-      const message = `Nos vemos ${dateSummaryText} para <b>${chosenPlan}</b>. ¡Promete ser un día increíble! ✨`;
+      const message = `Primero Dios nos vemos ${dateSummaryText} para <b>${chosenPlan}</b>. ¡Promete ser un día increíble! ✨`;
       document.getElementById('finalMessage').innerHTML = message;
 
-      // Limpiar etiquetas HTML para el mensaje de WhatsApp
+      // Mensaje plano para WhatsApp
       const cleanDateSummary = dateSummaryText.replace(/<b>/g, '').replace(/<\/b>/g, '');
-      const textoWhatsapp = `¡Hola! Ya respondí tu invitación 💖%0A%0A📅 *Fecha:* ${cleanDateSummary}%0A🍕 *Plan:* ${chosenPlan}%0A%0A¡Nos vemos! ✨`;
+      const textoWhatsapp = `¡Hola! Ya respondí tu invitación 💖%0A%0A📅 *Fecha:* Primero Dios nos vemos ${cleanDateSummary}%0A🍕 *Plan:* ${chosenPlan}%0A%0A¡Nos vemos! ✨`;
       document.getElementById('whatsappBtn').href = `https://api.whatsapp.com/send?text=${textoWhatsapp}`;
 
       nextStep(4);
