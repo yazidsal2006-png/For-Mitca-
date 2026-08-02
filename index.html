@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>¿Salimos?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -80,7 +83,7 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    h1 { color: #ff3366; font-size: 24px; margin-bottom: 12px; }
+    h1 { color: #ff3366; font-size: 25px; margin-bottom: 12px; }
     h2 { color: #ff3366; font-size: 22px; margin-bottom: 10px; }
     p { color: #555; font-size: 16px; line-height: 1.5; }
 
@@ -193,6 +196,16 @@
       border: 1px dashed #ff416c;
       margin-top: 15px;
     }
+
+    .footer-love {
+      font-family: 'Caveat', 'Comic Sans MS', cursive, sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 20px;
+      text-shadow: 1px 1px 3px rgba(255, 51, 102, 0.5);
+      letter-spacing: 0.5px;
+    }
   </style>
 </head>
 <body>
@@ -211,8 +224,7 @@
     <!-- Paso 1 -->
     <div id="step1" class="step active">
       <div class="decoration-icon">💖✨</div>
-      <h1>✨ 🤍 Te Quiero Mitca 🤍 ✨</h1>
-      <p style="margin-bottom: 8px; font-weight: bold; color: #ff3366;">¿Quieres salir conmigo?</p>
+      <h1>¿Quieres salir conmigo, Mitca?</h1>
       <p>¿Qué te parece, pequeña? 🥰</p>
       
       <div class="btn-container" id="btnArea">
@@ -224,7 +236,7 @@
     <!-- Paso 2: Elección de Fechas -->
     <div id="step2" class="step">
       <div class="decoration-icon">😮‍💨💨</div>
-      <h2>¡Pensaba que ibas a decir que no!</h2>
+      <h2>Menos mal, ¡pensaba que ibas a decir que no!</h2>
       <p>¿Cuándo y cuánto tiempo quieres ver a este joven y guapo y apuesto cristiano? 😇🙏✨</p>
       
       <label for="startDate">El:</label>
@@ -271,6 +283,9 @@
       <p style="margin-top: 15px; font-size: 13px; color: #666;">
         O puedes tomar una captura de pantalla y mandármela. ¡Nos vemos ese día primero Dios, chaparra! 😉✨
       </p>
+
+      <!-- Texto especial manuscrito blanco hasta el final -->
+      <p class="footer-love">✨ 🤍 Te Quiero Mitca 🤍 ✨</p>
     </div>
   </div>
 
@@ -352,12 +367,12 @@
         chosenPlan = selectVal;
       }
 
-      const message = `Primero Dios nos vemos ${dateSummaryText} para <b>${chosenPlan}</b>. ¡Promete ser un día increíble! ✨`;
+      const message = `Primero Dios nos vemos ${dateSummaryText} para <b>${chosenPlan}</b>.<br><b>¡Ponte tus mejores trapos! 👗✨</b>`;
       document.getElementById('finalMessage').innerHTML = message;
 
       // Mensaje plano para WhatsApp
       const cleanDateSummary = dateSummaryText.replace(/<b>/g, '').replace(/<\/b>/g, '');
-      const textoWhatsapp = `¡Hola! Ya respondí tu invitación 💖%0A%0A📅 *Fecha:* Primero Dios nos vemos ${cleanDateSummary}%0A🍕 *Plan:* ${chosenPlan}%0A%0A¡Nos vemos! ✨`;
+      const textoWhatsapp = `¡Hola! Ya respondí tu invitación 💖%0A%0A📅 *Fecha:* Primero Dios nos vemos ${cleanDateSummary}%0A🍕 *Plan:* ${chosenPlan}%0A👗 ¡Me pondré mis mejores trapos! ✨%0A%0A¡Nos vemos! ✨`;
       document.getElementById('whatsappBtn').href = `https://api.whatsapp.com/send?text=${textoWhatsapp}`;
 
       nextStep(4);
