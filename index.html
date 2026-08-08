@@ -60,7 +60,6 @@
       text-shadow: 1px 1px 4px rgba(255, 105, 180, 0.4);
     }
 
-    /* Elevación más lenta y suave */
     @keyframes floatUp {
       0% {
         transform: translateY(0) scale(0.8) rotate(0deg);
@@ -109,13 +108,11 @@
       border: 2px solid rgba(255, 255, 255, 0.8);
       min-height: 380px;
       
-      /* Inicia oculta y pequeñita para la animación */
       opacity: 0;
       transform: scale(0);
       display: none;
     }
 
-    /* Animación de entrada de la tarjeta: Crecimiento elástico "Pa!" */
     .card.show-card {
       display: block;
       animation: popIn 1.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
@@ -148,7 +145,6 @@
       font-style: italic;
     }
 
-    /* Área delimitada para los botones */
     .btn-container {
       position: relative;
       width: 100%;
@@ -265,13 +261,9 @@
 </head>
 <body>
 
-  <!-- Contenedor dinámico del fondo continuo -->
   <div id="hearts-container"></div>
-  
-  <!-- Contenedor para la explosión/llenado inicial -->
   <div id="explosion-container"></div>
 
-  <!-- Tarjeta principal -->
   <div class="card" id="mainCard">
     <!-- Paso 1 -->
     <div id="step1" class="step active">
@@ -285,7 +277,7 @@
       </div>
     </div>
 
-    <!-- Paso 2: Elección de Fechas -->
+    <!-- Paso 2 -->
     <div id="step2" class="step">
       <div class="decoration-icon">😮‍💨💨</div>
       <h2>Menos mal, ¡pensaba que ibas a decir que no!</h2>
@@ -327,7 +319,6 @@
         <p id="finalMessage"></p>
       </div>
 
-      <!-- Botón para enviar por WhatsApp directamente -->
       <a id="whatsappBtn" href="#" target="_blank" class="btn btn-whatsapp">
         Enviar respuesta por WhatsApp 📲
       </a>
@@ -336,7 +327,6 @@
         O puedes tomar una captura de pantalla y mandármela. ¡Nos vemos ese día primero Dios, chaparra! 😉✨
       </p>
 
-      <!-- Texto especial manuscrito blanco hasta el final -->
       <p class="footer-love">✨ 🤍 Te Quiero Naarai 🤍 ✨</p>
     </div>
   </div>
@@ -345,9 +335,9 @@
     let dateSummaryText = '';
     let chosenPlan = '';
 
-    // Lista limpia de frases, emojis y citas bíblicas
+    // Incluye 🫶🏽 y 💌, sin 🌝
     const floatingItems = [
-      '💞', '🩷', '💝', '🌕', '🤍', '💗', '💕', '💖', '🫂', '✨', '🥰', '😊', '🌙', '😛', '🌸',
+      '💞', '🩷', '💝', '🌕', '🤍', '💗', '💕', '💖', '🫂', '✨', '🥰', '😊', '🌙', '🌸', '🫶🏽', '💌',
       'Te quiero mucho', 'Me gustas', 'Mitca', 'Asombrosa', 'Naarai', 'Bonita', 'Wapa', 
       'Renacuaja', 'Pequeña', 'Helmocha', 'Increíble', 
       'Juan 15:13', 'Jeremías 31:3', '1 Corintios 13', 'Cantares 2:14', 'Fil 1:3'
@@ -365,13 +355,11 @@
       return selectedContent;
     }
 
-    // Llenar completamente la pantalla como "pelotero"
     function runFullExplosionSequence() {
       const explosionContainer = document.getElementById('explosion-container');
       const itemsList = [];
-      const totalItems = 130; // Gran densidad para cubrimiento total
+      const totalItems = 130;
 
-      // Crear elementos repartidos en una cuadrícula sobre la pantalla
       for (let i = 0; i < totalItems; i++) {
         const item = document.createElement('div');
         item.className = 'fill-item';
@@ -393,7 +381,6 @@
           item.style.fontSize = (Math.floor(Math.random() * 20) + 22) + 'px';
         }
 
-        // Aparecen de forma progresiva llenando la pantalla
         item.style.opacity = '0';
         item.style.transform = 'scale(0) rotate(-20deg)';
 
@@ -406,31 +393,25 @@
         }, i * 18);
       }
 
-      // Esperar 3 segundos con la pantalla totalmente llena
       setTimeout(() => {
-        // Desocupar/vaciar todo
         itemsList.forEach((el, idx) => {
           setTimeout(() => {
             el.classList.add('clear-out');
           }, idx * 4);
         });
 
-        // Al terminar de vaciar, aparece la tarjeta y se activa el fondo continuo
         setTimeout(() => {
           explosionContainer.innerHTML = '';
           
-          // Aparición de la tarjeta desde el fondo (de chiquita a grande "Pa!")
           const card = document.getElementById('mainCard');
           card.classList.add('show-card');
 
-          // Iniciar la lluvia flotante continua más lenta
           startContinuousFloating();
         }, 600);
 
       }, 3000 + (totalItems * 18));
     }
 
-    // Lluvia flotante constante del fondo (más pausada y suave)
     function createHeart() {
       const container = document.getElementById('hearts-container');
       const item = document.createElement('div');
@@ -449,7 +430,6 @@
         item.style.fontSize = (Math.floor(Math.random() * 16) + 20) + 'px';
       }
       
-      // Velocidad reducida (entre 10 y 16 segundos por recorrido)
       const duration = Math.random() * 6 + 10;
       item.style.animationDuration = duration + 's';
 
@@ -461,10 +441,10 @@
     }
 
     function startContinuousFloating() {
-      // Flujo constante pero relajado (cada 600ms)
+      // Frecuencia aumentada 30% más (cada 420ms)
       setInterval(() => {
         createHeart();
-      }, 600);
+      }, 420);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
