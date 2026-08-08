@@ -50,7 +50,7 @@
 
     .heart-bg {
       position: absolute;
-      bottom: -80px;
+      bottom: -100px;
       color: rgba(255, 255, 255, 0.9);
       animation: floatUp linear forwards;
       user-select: none;
@@ -114,7 +114,6 @@
       animation: popIn 1.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
     }
 
-    /* Animación de pulso festivo al presionar el botón final */
     .card.sent-celebration {
       animation: heartPulse 0.8s ease-in-out infinite alternate !important;
       box-shadow: 0 0 40px rgba(255, 51, 102, 0.6);
@@ -342,7 +341,6 @@
     let dateSummaryText = '';
     let chosenPlan = '';
 
-    // Lista completa de frases, emojis y bíblicos (sin duplicados, con 👉🏼👈🏾 juntos)
     const floatingItems = [
       '💞', '🩷', '💝', '🌕', '🤍', '💗', '💕', '💖', '🫂', '✨', '🥰', '😊', '🌙', '🌸', '🫶🏽', '💌',
       '🥹', '🧸', '🎀', '💫', '💟', '🤩', '❤️', '❣️', '❤️‍🔥', '🫀', '😋', '😜', '🐴', '💐', '🪷', '🌺', '🌟', '⭐️', '❤️‍🩹', '💓', '👉🏼👈🏾', '🙃', '🫪',
@@ -381,8 +379,8 @@
         item.style.left = left + '%';
         item.style.top = top + '%';
 
-        // Probabilidad aleatoria de que salgan 50% más grandes
-        const isBig = Math.random() < 0.25;
+        // 30% de probabilidad aleatoria de crecer exactamente un 50% más
+        const isBig = Math.random() < 0.3;
         const multiplier = isBig ? 1.5 : 1.0;
 
         if (content.length > 3) {
@@ -434,8 +432,8 @@
       
       item.style.left = Math.random() * 92 + '%';
       
-      // Aparición aleatoria de elementos 50% más grandes
-      const isBig = Math.random() < 0.3; // 30% de probabilidad de ser gigante
+      // Aplicación aleatoria del 50% de aumento de tamaño para cualquier tipo de elemento (frase o emoji)
+      const isBig = Math.random() < 0.35; // 35% de frecuencia para elementos gigantes
       const multiplier = isBig ? 1.5 : 1.0;
 
       if (selectedContent.length > 3) {
@@ -457,13 +455,11 @@
     }
 
     function startContinuousFloating() {
-      // Un 50% más abundante que el valor original (cada 300ms)
       setInterval(() => {
         createHeart();
       }, 300);
     }
 
-    // Efecto de animación final cuando se manda el mensaje
     function triggerFinalAnimation() {
       const card = document.getElementById('mainCard');
       card.classList.add('sent-celebration');
