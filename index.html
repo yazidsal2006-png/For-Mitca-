@@ -26,8 +26,8 @@
       padding: 20px;
     }
 
-    /* Fondo animado con brillitos */
-    .bg-sparkles {
+    /* Contenedor para la lluvia inicial y continua de corazones */
+    #hearts-container {
       position: absolute;
       top: 0;
       left: 0;
@@ -35,33 +35,35 @@
       height: 100%;
       pointer-events: none;
       z-index: 1;
+      overflow: hidden;
     }
 
-    .sparkle {
+    .heart-bg {
       position: absolute;
-      list-style: none;
-      display: block;
-      width: 20px;
-      height: 20px;
-      background: rgba(255, 255, 255, 0.4);
-      bottom: -150px;
-      animation: animate 20s infinite linear;
-      border-radius: 50%;
+      bottom: -80px;
+      color: rgba(255, 255, 255, 0.7);
+      animation: floatUp linear forwards;
+      user-select: none;
     }
 
-    .sparkle:nth-child(1) { left: 25%; width: 25px; height: 25px; animation-delay: 0s; }
-    .sparkle:nth-child(2) { left: 10%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 12s; }
-    .sparkle:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
-    .sparkle:nth-child(4) { left: 40%; width: 30px; height: 30px; animation-delay: 0s; animation-duration: 18s; }
-    .sparkle:nth-child(5) { left: 65%; width: 15px; height: 15px; animation-delay: 0s; }
-    .sparkle:nth-child(6) { left: 75%; width: 25px; height: 25px; animation-delay: 3s; }
-
-    @keyframes animate {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 50%; }
-      100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.6) rotate(0deg);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.85;
+      }
+      85% {
+        opacity: 0.85;
+      }
+      100% {
+        transform: translateY(-115vh) scale(1.2) rotate(25deg);
+        opacity: 0;
+      }
     }
 
-    /* Tarjeta principal */
+    /* Tarjeta principal con movimiento muy leve y lento */
     .card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
@@ -74,13 +76,13 @@
       position: relative;
       z-index: 10;
       border: 2px solid rgba(255, 255, 255, 0.8);
-      animation: fadeIn 0.8s ease-in-out;
+      animation: cardFloat 6s ease-in-out infinite;
       min-height: 380px;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
     }
 
     h1 { color: #ff3366; font-size: 25px; margin-bottom: 12px; }
@@ -154,6 +156,11 @@
     .step { display: none; }
     .step.active { display: block; animation: fadeIn 0.5s ease-in-out; }
 
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
     label {
       display: block;
       text-align: left;
@@ -180,13 +187,12 @@
       font-size: 48px;
       margin-bottom: 10px;
       display: inline-block;
-      animation: pulse 1.5s infinite;
+      animation: pulse 2s infinite ease-in-out;
     }
 
     @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     .final-box {
@@ -210,15 +216,8 @@
 </head>
 <body>
 
-  <!-- Fondo de brillitos -->
-  <ul class="bg-sparkles">
-    <li class="sparkle"></li>
-    <li class="sparkle"></li>
-    <li class="sparkle"></li>
-    <li class="sparkle"></li>
-    <li class="sparkle"></li>
-    <li class="sparkle"></li>
-  </ul>
+  <!-- Contenedor dinámico de corazones -->
+  <div id="hearts-container"></div>
 
   <div class="card">
     <!-- Paso 1 -->
@@ -292,6 +291,48 @@
   <script>
     let dateSummaryText = '';
     let chosenPlan = '';
+
+    // Generar ráfaga inicial de corazones al entrar a la página
+    function createHeart(isInitial = false) {
+      const container = document.getElementById('hearts-container');
+      const heart = document.createElement('div');
+      heart.className = 'heart-bg';
+      
+      const heartsList = ['🤍', '💖', '💕', '✨', '💗', '🤍'];
+      heart.innerText = heartsList[Math.floor(Math.random() * heartsList.length)];
+      
+      heart.style.left = Math.random() * 100 + '%';
+      
+      const size = Math.floor(Math.random() * 20) + 18;
+      heart.style.fontSize = size + 'px';
+      
+      const duration = Math.random() * 5 + 8; // Entre 8 y 13 segundos
+      heart.style.animationDuration = duration + 's';
+
+      if (isInitial) {
+        // En la carga inicial se esparcen por la pantalla
+        const randomY = Math.random() * -80;
+        heart.style.transform = `translateY(${randomY}vh)`;
+      }
+
+      container.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, duration * 1000);
+    }
+
+    // Al cargar la página genera un estallido inicial
+    window.addEventListener('DOMContentLoaded', () => {
+      for (let i = 0; i < 25; i++) {
+        setTimeout(() => createHeart(true), i * 120);
+      }
+      
+      // Mantener flujo constante continuo
+      setInterval(() => {
+        createHeart(false);
+      }, 600);
+    });
 
     function moveButton() {
       const btnNo = document.getElementById('btnNo');
