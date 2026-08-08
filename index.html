@@ -26,7 +26,7 @@
       padding: 20px;
     }
 
-    /* Contenedor para la lluvia inicial y continua de corazones */
+    /* Contenedor dinámico del fondo */
     #hearts-container {
       position: absolute;
       top: 0;
@@ -41,29 +41,31 @@
     .heart-bg {
       position: absolute;
       bottom: -80px;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.85);
       animation: floatUp linear forwards;
       user-select: none;
+      white-space: nowrap;
+      text-shadow: 1px 1px 4px rgba(255, 105, 180, 0.3);
     }
 
     @keyframes floatUp {
       0% {
-        transform: translateY(0) scale(0.6) rotate(0deg);
+        transform: translateY(0) scale(0.7) rotate(0deg);
         opacity: 0;
       }
       15% {
-        opacity: 0.85;
+        opacity: 0.95;
       }
       85% {
-        opacity: 0.85;
+        opacity: 0.95;
       }
       100% {
-        transform: translateY(-115vh) scale(1.2) rotate(25deg);
+        transform: translateY(-115vh) scale(1.1) rotate(15deg);
         opacity: 0;
       }
     }
 
-    /* Tarjeta principal con movimiento muy leve y lento */
+    /* Tarjeta principal */
     .card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
@@ -216,7 +218,7 @@
 </head>
 <body>
 
-  <!-- Contenedor dinámico de corazones -->
+  <!-- Contenedor dinámico del fondo -->
   <div id="hearts-container"></div>
 
   <div class="card">
@@ -292,53 +294,64 @@
     let dateSummaryText = '';
     let chosenPlan = '';
 
-    // Generar ráfaga inicial de corazones al entrar a la página
-    function createHeart(isInitial = false) {
-      const container = document.getElementById('hearts-container');
-      const heart = document.createElement('div');
-      heart.className = 'heart-bg';
-      
-      const heartsList = ['🤍', '💖', '💕', '✨', '💗', '🤍'];
-      heart.innerText = heartsList[Math.floor(Math.random() * heartsList.length)];
-      
-      heart.style.left = Math.random() * 100 + '%';
-      
-      const size = Math.floor(Math.random() * 20) + 18;
-      heart.style.fontSize = size + 'px';
-      
-      const duration = Math.random() * 5 + 8; // Entre 8 y 13 segundos
-      heart.style.animationDuration = duration + 's';
+    // Lista completa de emojis y palabras flotantes
+    const floatingItems = [
+      '💖', '💗', '💓', '💕', '🌸', '🤍', '🥰', '😊', '🌙', '🌝', '✨',
+      'Te Quiero mucho', 'Me Gustas', 'Mitca', 'Asombrosa', 'Naarai', 
+      'Bonita', 'Wapa', 'Chaparrita', 'Pequeña', 'Helmocha', 'Increible',
+    ];
 
-      if (isInitial) {
-        // En la carga inicial se esparcen por la pantalla
-        const randomY = Math.random() * -80;
-        heart.style.transform = `translateY(${randomY}vh)`;
+    function createHeart(isInitialExplosion = false) {
+      const container = document.getElementById('hearts-container');
+      const item = document.createElement('div');
+      item.className = 'heart-bg';
+      
+      const selectedContent = floatingItems[Math.floor(Math.random() * floatingItems.length)];
+      item.innerText = selectedContent;
+      
+      item.style.left = Math.random() * 92 + '%';
+      
+      if (selectedContent.length > 2) {
+        item.style.fontSize = (Math.floor(Math.random() * 8) + 16) + 'px';
+        item.style.fontFamily = "'Caveat', cursive, sans-serif";
+        item.style.fontWeight = "bold";
+      } else {
+        item.style.fontSize = (Math.floor(Math.random() * 18) + 20) + 'px';
+      }
+      
+      const duration = Math.random() * 4 + 8; // Duración entre 8 y 12 segundos
+      item.style.animationDuration = duration + 's';
+
+      if (isInitialExplosion) {
+        // En la explosión inicial se distribuyen a distintas alturas inmediatamente
+        const randomY = Math.random() * -90;
+        item.style.transform = `translateY(${randomY}vh)`;
       }
 
-      container.appendChild(heart);
+      container.appendChild(item);
 
       setTimeout(() => {
-        heart.remove();
+        item.remove();
       }, duration * 1000);
     }
 
-    // Al cargar la página genera un estallido inicial
+    // Disparar explosión inicial masiva y mantener el flujo continuo
     window.addEventListener('DOMContentLoaded', () => {
-      for (let i = 0; i < 25; i++) {
-        setTimeout(() => createHeart(true), i * 120);
+      // Explosión inicial de 50 elementos
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => createHeart(true), i * 30);
       }
       
-      // Mantener flujo constante continuo
+      // Mantenimiento de lluvia continua
       setInterval(() => {
         createHeart(false);
-      }, 600);
+      }, 450);
     });
 
     function moveButton() {
       const btnNo = document.getElementById('btnNo');
       const container = document.getElementById('btnArea');
       
-      // Delimitación dentro del recuadro
       const maxX = container.clientWidth - btnNo.offsetWidth - 10;
       const maxY = container.clientHeight - btnNo.offsetHeight - 10;
       
@@ -411,7 +424,6 @@
       const message = `Primero Dios nos vemos ${dateSummaryText} para <b>${chosenPlan}</b>.<br><b>¡Ponte tus mejores trapos! 👗✨</b>`;
       document.getElementById('finalMessage').innerHTML = message;
 
-      // Mensaje plano para WhatsApp
       const cleanDateSummary = dateSummaryText.replace(/<b>/g, '').replace(/<\/b>/g, '');
       const textoWhatsapp = `¡Hola! Ya respondí tu invitación 💖%0A%0A📅 *Fecha:* Primero Dios nos vemos ${cleanDateSummary}%0A🍕 *Plan:* ${chosenPlan}%0A👗 ¡Me pondré mis mejores trapos! ✨%0A%0A¡Nos vemos! ✨`;
       document.getElementById('whatsappBtn').href = `https://api.whatsapp.com/send?text=${textoWhatsapp}`;
